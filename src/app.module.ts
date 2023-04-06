@@ -5,8 +5,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { JwtStrategy } from './auth/auth.jwtAuthGuard';
+import { UserEntity } from './entity/userEntity';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { JwtStrategy } from './auth/auth.jwtAuthGuard';
       username: 'root',
       password: 'beta1243',
       database: 'kindershop',
-      entities: [],
+      entities: [UserEntity],
       synchronize: false,
     }),
     UserModule,
@@ -26,8 +28,10 @@ import { JwtStrategy } from './auth/auth.jwtAuthGuard';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    AuthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [AuthService],
 })
 export class AppModule {}

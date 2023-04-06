@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryColumn({ type: 'uniqueidentifier' })
+  @PrimaryColumn()
   email: string;
   @Column()
   password: string;
@@ -27,18 +27,20 @@ export class UserEntity {
   @Column()
   stadt: string;
 
-  @Column()
+  @Column({ nullable: true })
   l_nachname: string;
 
-  @Column()
+  @Column({ nullable: true })
   l_strasse: string;
 
-  @Column()
+  @Column({ nullable: true })
   l_hausnummer: string;
 
-  @Column()
+  @Column({ nullable: true })
   l_plz: string;
 
-  @Column()
+  @Column({ nullable: true })
   l_stadt: string;
+  @Column({ nullable: true })
+  role: string;
 }

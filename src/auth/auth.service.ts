@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { JwtAuthService } from './jwt-auth-service.service';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { ILoginForm } from 'src/model/loginForm';
 import { UserEntity } from 'src/entity/userEntity';
+import { IUserDTO } from 'src/dto/user';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UserService,
-    private readonly jwtAuthService: JwtAuthService,
+    private readonly jwtAuthService: JwtService,
   ) {}
 
   async validateUser(useremail: string, password: string): Promise<any> {
@@ -27,9 +28,25 @@ export class AuthService {
       usero.email,
       usero.password,
     ) as unknown as UserEntity;
-    const payload = { email: user.email, sub: user.id };
+    if (user === null) {
+      return new Error('Unauthorized!');
+    }
+
+    const payload = { email: user.email, sub: user.id, role: user.role };
     return {
-      access_token: await this.jwtAuthService.signPayload(payload),
+      access_token: await this.jwtAuthService.sign(payload),
     };
+  }
+  async registerUser(user: IUserDTO) {
+    const solt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(user.password, solt);
+    user.role = 'user';
+    let userE: UserEntity;
+    Object.assign(userE, user);
+    userE.password = password;
+    const registered = await this.usersService.createUser(userE);
+    if (registered.id !== undefined) {
+      return this.login({ email: user.email, password: user.password });
+    }
   }
 }
