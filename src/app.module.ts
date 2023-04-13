@@ -14,10 +14,10 @@ import { AuthService } from './auth/auth.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '192.168.0.10',
+      host: '207.154.246.36',
       port: 3306,
-      username: 'root',
-      password: 'beta1243',
+      username: 'bartekbartek**',
+      password: 'beta**1243**',
       database: 'kindershop',
       entities: [UserEntity],
       synchronize: false,

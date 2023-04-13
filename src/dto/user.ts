@@ -15,7 +15,6 @@ export class IUserDTO {
   @IsNotEmpty({ message: 'Straße kann nicht leer sein' })
   strasse: string;
   @IsNotEmpty({ message: 'Housenr. kann nicht leer sein' })
-  @IsNumber()
   hausnummer: string;
   @IsNotEmpty({ message: 'Postleitzahl kann nicht leer sein' })
   @IsNumber()

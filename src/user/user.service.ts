@@ -9,7 +9,15 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-
+  async getAllUserCount() {
+    try {
+      return await (
+        await this.userRepository.find()
+      ).length;
+    } catch (err) {
+      return err;
+    }
+  }
   async createUser(user: UserEntity): Promise<UserEntity> {
     try {
       const createdUser = await this.userRepository.save(user);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -24,29 +24,41 @@ export class AuthService {
   }
 
   async login(usero: ILoginForm): Promise<any> {
-    const user = this.validateUser(
-      usero.email,
-      usero.password,
-    ) as unknown as UserEntity;
-    if (user === null) {
-      return new Error('Unauthorized!');
+    try {
+      const user = (await this.validateUser(
+        usero.email,
+        usero.password,
+      )) as unknown as UserEntity;
+      if (user === null) {
+        throw new HttpException('Unauthorized !', HttpStatus.FORBIDDEN);
+      }
+      const payload = { email: user.email, sub: user.id, role: user.role };
+      return {
+        access_token: await this.jwtAuthService.sign(payload),
+      };
+    } catch (err) {
+      return err;
     }
-
-    const payload = { email: user.email, sub: user.id, role: user.role };
-    return {
-      access_token: await this.jwtAuthService.sign(payload),
-    };
   }
   async registerUser(user: IUserDTO) {
-    const solt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(user.password, solt);
-    user.role = 'user';
-    let userE: UserEntity;
-    Object.assign(userE, user);
-    userE.password = password;
-    const registered = await this.usersService.createUser(userE);
-    if (registered.id !== undefined) {
-      return this.login({ email: user.email, password: user.password });
+    try {
+      const solt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(user.password, solt);
+      const first = await this.usersService.getAllUserCount();
+      user.role = 'user';
+      if (first === 0) {
+        user.role = 'admin';
+      }
+      const userE: UserEntity = new UserEntity();
+      Object.assign(userE, user);
+      userE.password = password;
+
+      const registered = await this.usersService.createUser(userE);
+      if (registered.id !== undefined) {
+        return this.login({ email: user.email, password: user.password });
+      }
+    } catch (err) {
+      return err;
     }
   }
 }
