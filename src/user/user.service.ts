@@ -37,6 +37,17 @@ export class UserService {
       throw new Error(`Could not get user by id: ${error.message}`);
     }
   }
+  async getUserByIdOut(useremail: string): Promise<UserEntity> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email: useremail },
+      });
+      user.password = null;
+      return user;
+    } catch (error) {
+      throw new Error(`Could not get user by id: ${error.message}`);
+    }
+  }
 
   async updateUser(id: number, user: UserEntity): Promise<number> {
     try {

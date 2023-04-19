@@ -22,7 +22,7 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param('id') email: string): Promise<UserEntity> {
-    return await this.userService.getUserById(email);
+    return await this.userService.getUserByIdOut(email);
   }
 
   @Put(':id')
