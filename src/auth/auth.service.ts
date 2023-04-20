@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { ILoginForm } from 'src/model/loginForm';
 import { UserEntity } from 'src/entity/userEntity';
-import { IUserDTO } from 'src/dto/user';
+import { IUserDTO } from 'src/dto/userDTO';
 
 @Injectable()
 export class AuthService {
@@ -60,5 +60,8 @@ export class AuthService {
     } catch (err) {
       return err;
     }
+  }
+  public decode(token: string) {
+    return this.jwtAuthService.decode(token);
   }
 }

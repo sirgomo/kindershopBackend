@@ -46,7 +46,40 @@ export class DataBase {
                 role VARCHAR(255),
                 PRIMARY KEY (id),
                 UNIQUE (email)
-              );
+              ); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+              CREATE TABLE IF NOT EXISTS artikel (
+                id int NOT NULL AUTO_INCREMENT,
+                name varchar(255) NOT NULL,
+                description TEXT NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                brand VARCHAR(255) NOT NULL,
+                model VARCHAR(255) NOT NULL,
+                sku VARCHAR(255) NOT NULL,
+                ean VARCHAR(255) NOT NULL,
+                availability VARCHAR(255) NOT NULL,
+                weight DECIMAL(10,2) NOT NULL,
+                dimensions VARCHAR(255) NOT NULL,
+                images VARCZAR(255) NOT NULL,
+                relatedProducts TEXT NOT NULL,
+                reviews TEXT NOT NULL,
+                rating DECIMAL(10,2) NOT NULL,
+                PRIMARY KEY (id)
+              ); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+              CREATE TABLE IF NOT EXISTS artikel_category (
+                id int NOT NULL AUTO_INCREMENT,
+                name varchar(255) NOT NULL,
+                PRIMARY KEY (id)
+              ); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+              CREATE TABLE IF NOT EXISTS artikel_categories_artikels_artikel (
+                artikelId int NOT NULL,
+                artikelCategoryId int NOT NULL,
+                PRIMARY KEY (artikelId, artikelCategoryId),
+                CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_id FOREIGN KEY (artikelId) REFERENCES artikel(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_category_id FOREIGN KEY (artikelCategoryId) REFERENCES artikel_category(id) ON DELETE CASCADE ON UPDATE CASCADE
+              ); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
               `,
           );
           console.log('Database created');

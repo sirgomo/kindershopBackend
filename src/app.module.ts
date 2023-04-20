@@ -9,6 +9,8 @@ import { JwtStrategy } from './auth/auth.jwtAuthGuard';
 import { UserEntity } from './entity/userEntity';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
+import { Artikel } from './entity/artikelEntity';
+import { ArtikelCategory } from './entity/artikelKategoryEntity';
 
 @Module({
   imports: [
@@ -19,14 +21,14 @@ import { AuthService } from './auth/auth.service';
       username: 'bartekbartek**',
       password: 'beta**1243**',
       database: 'kindershop',
-      entities: [UserEntity],
+      entities: [UserEntity, Artikel, ArtikelCategory],
       synchronize: false,
     }),
     UserModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1h' },
     }),
     AuthModule,
   ],
