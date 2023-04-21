@@ -12,6 +12,7 @@ import { ArtikelCategory } from 'src/entity/artikelKategoryEntity';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/auth/role/role.guard';
+import { CategoryDTO } from 'src/dto/categoryDTO';
 
 @Controller('category')
 export class CategoryController {
@@ -24,7 +25,7 @@ export class CategoryController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'), RoleGuard)
-  async create(@Body() category: ArtikelCategory): Promise<ArtikelCategory> {
+  async create(@Body() category: CategoryDTO): Promise<ArtikelCategory> {
     return await this.categoryService.create(category);
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CategoryDTO } from 'src/dto/categoryDTO';
 import { ArtikelCategory } from 'src/entity/artikelKategoryEntity';
 import { Repository } from 'typeorm';
 
@@ -10,8 +11,9 @@ export class CategoryService {
     private catRepo: Repository<ArtikelCategory>,
   ) {}
 
-  async create(category: ArtikelCategory): Promise<ArtikelCategory> {
+  async create(category: CategoryDTO): Promise<ArtikelCategory> {
     try {
+      await this.catRepo.create(category);
       return await this.catRepo.save(category);
     } catch (error) {
       throw new Error(`Error creating category: ${error.message}`);

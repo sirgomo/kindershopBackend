@@ -11,6 +11,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { Artikel } from './entity/artikelEntity';
 import { ArtikelCategory } from './entity/artikelKategoryEntity';
+import { CategoryModule } from './category/category/category.module';
+import { ArtikelModule } from './artikel/artikel/artikel.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { ArtikelCategory } from './entity/artikelKategoryEntity';
       signOptions: { expiresIn: '1h' },
     }),
     AuthModule,
+    CategoryModule,
+    ArtikelModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
