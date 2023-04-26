@@ -34,13 +34,13 @@ export class CategoryController {
   async update(
     @Param('id') id: number,
     @Body() category: ArtikelCategory,
-  ): Promise<ArtikelCategory> {
+  ): Promise<number> {
     return await this.categoryService.update(id, category);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RoleGuard)
-  async delete(@Param('id') id: number): Promise<void> {
+  async delete(@Param('id') id: number): Promise<number> {
     return await this.categoryService.delete(id);
   }
 }
