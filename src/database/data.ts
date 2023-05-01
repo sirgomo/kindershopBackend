@@ -1,31 +1,31 @@
 export class DataBase {
-  mysql = require('mysql2/promise');
-  checkData() {
-    this.checkDatabase();
-  }
+    mysql = require('mysql2/promise');
+    checkData() {
+        this.checkDatabase();
+    }
 
-  async checkDatabase() {
-    const connection = await this.mysql.createConnection({
-      host: '207.154.246.36',
-      port: 3306,
-      user: 'bartekbartek**',
-      password: 'beta**1243**',
-      multipleStatements: true,
-    });
-
-    try {
-      await connection.query('USE kindershop');
-      console.log('Database connection established');
-    } catch (error) {
-      console.error(`Error connecting to database: ${error}`);
-
-      // If connection failed due to database not existing, create it
-      if (error.code === 'ER_BAD_DB_ERROR') {
-        console.log('Creating database...');
+    async checkDatabase() {
+        const connection = await this.mysql.createConnection({
+            host: '207.154.246.36',
+            port: 3306,
+            user: 'bartekbartek**',
+            password: 'beta**1243**',
+            multipleStatements: true,
+        });
 
         try {
-          await connection.query(
-            `CREATE DATABASE kindershop;
+            await connection.query('USE kindershop');
+            console.log('Database connection established');
+        } catch (error) {
+            console.error(`Error connecting to database: ${error}`);
+
+            // If connection failed due to database not existing, create it
+            if (error.code === 'ER_BAD_DB_ERROR') {
+                console.log('Creating database...');
+
+                try {
+                    await connection.query(
+                        `CREATE DATABASE kindershop;
                 
               USE kindershop;
 
@@ -60,6 +60,7 @@ export class DataBase {
                 ean varchar(255) NOT NULL,
                 availability varchar(255) NOT NULL,
                 weight DECIMAL(10,2) NOT NULL,
+                menge INTEGER NOT NULL DEFAULT 0,
                 dimensions varchar(255) NOT NULL,
                 images varchar(255) NOT NULL,
                 relatedProducts TEXT NOT NULL,
@@ -74,7 +75,7 @@ export class DataBase {
                 PRIMARY KEY (id)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-              CREATE TABLE IF NOT EXISTS artikel_categories_artikels_artikel (
+              CREATE TABLE IF NOT EXISTS artikel_categories_artikel_category (
                 artikelId int NOT NULL,
                 artikelCategoryId int NOT NULL,
                 PRIMARY KEY (artikelId, artikelCategoryId),
@@ -82,14 +83,14 @@ export class DataBase {
                 CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_category_id FOREIGN KEY (artikelCategoryId) REFERENCES artikel_category(id) ON DELETE CASCADE ON UPDATE CASCADE
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
               `,
-          );
-          console.log('Database created');
-        } catch (error) {
-          console.error(`Error creating database: ${error}`);
+                    );
+                    console.log('Database created');
+                } catch (error) {
+                    console.error(`Error creating database: ${error}`);
+                }
+            }
         }
-      }
-    }
 
-    await connection.end();
-  }
+        await connection.end();
+    }
 }

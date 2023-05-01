@@ -1,18 +1,43 @@
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { CategoryDTO } from './categoryDTO';
+import { ArtikelCategory } from 'src/entity/artikelKategoryEntity';
+
 export class ArtikelDTO {
-    readonly id: number;
-    readonly name: string;
-    readonly description: string;
-    readonly price: number;
-    readonly brand: string;
-    readonly model: string;
-    readonly sku: string;
-    readonly ean: string;
-    readonly availability: string;
-    readonly weight: number;
-    readonly dimensions: string;
-    readonly images: string;
-    readonly relatedProducts: string;
-    readonly reviews: string;
-    readonly rating: number;
-    readonly categories: number[];
+    @IsOptional()
+    id: number;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    name: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    description: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    @IsNumber()
+    price: number;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    brand: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    model: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    sku: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    ean: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    availability: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    @IsNumber()
+    weight: number;
+    @IsOptional()
+    menge: number;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    dimensions: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    images: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    relatedProducts: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    reviews: string;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    @IsNumber()
+    rating: number;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    categories: ArtikelCategory[];
 }

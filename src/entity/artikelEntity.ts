@@ -38,6 +38,8 @@ export class Artikel {
 
     @Column()
     weight: number;
+    @Column()
+    menge: number;
 
     @Column()
     dimensions: string;
