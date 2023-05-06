@@ -5,6 +5,7 @@ import { ArtikelDTO } from 'src/dto/artikelDTO';
 import { Artikel } from 'src/entity/artikelEntity';
 import { ArtikelCategory } from 'src/entity/artikelKategoryEntity';
 import { Repository } from 'typeorm';
+import * as fs from 'fs';
 
 @Injectable()
 export class ArtikelService {
@@ -80,11 +81,21 @@ export class ArtikelService {
     @UseGuards(AuthGuard())
     async delete(id: number): Promise<number> {
         try {
+            const art = await this.artikelRepository.findOne({
+                where: { id: id },
+            });
+            this.deleteImage(art.images);
             return (await this.artikelRepository.delete(id)).affected;
         } catch (error) {
             throw new Error(
                 `Error while deleting article with id ${id}: ${error.message}`,
             );
         }
+    }
+    private async deleteImage(imageId: string) {
+        console.log('delete image ' + imageId);
+        await fs.unlink('./bilder/' + imageId, (err) => {
+            console.log(err);
+        });
     }
 }
