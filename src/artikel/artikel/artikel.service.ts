@@ -42,7 +42,6 @@ export class ArtikelService {
     async create(artikel: ArtikelDTO): Promise<Artikel> {
         try {
             const art = await this.artikelRepository.create(artikel);
-            console.log(art);
             return await this.artikelRepository.save(art).then(
                 (res) => {
                     return res;

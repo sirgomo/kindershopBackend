@@ -4,11 +4,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { DataBase } from './database/data';
 
 async function bootstrap() {
-  const data = new DataBase();
-  data.checkData();
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
-  await app.listen(3000);
+    const data = new DataBase();
+    data.checkData();
+    const app = await NestFactory.create(AppModule);
+    app.useGlobalPipes(new ValidationPipe());
+    app.enableCors();
+    await app.listen(3000);
 }
 bootstrap();

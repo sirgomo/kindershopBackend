@@ -15,29 +15,29 @@ import { CategoryModule } from './category/category/category.module';
 import { ArtikelModule } from './artikel/artikel/artikel.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '207.154.246.36',
-      port: 3306,
-      username: 'bartekbartek**',
-      password: 'beta**1243**',
-      database: 'kindershop',
-      entities: [UserEntity, Artikel, ArtikelCategory],
-      synchronize: false,
-    }),
-    UserModule,
-    PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
-    }),
-    AuthModule,
-    CategoryModule,
-    ArtikelModule,
-  ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+    imports: [
+        TypeOrmModule.forRoot({
+            type: 'mysql',
+            host: '192.168.0.11',
+            port: 3306,
+            username: 'root',
+            password: 'beta1243',
+            database: 'kindershop',
+            entities: [UserEntity, Artikel, ArtikelCategory],
+            synchronize: false,
+        }),
+        UserModule,
+        PassportModule,
+        JwtModule.register({
+            secret: jwtConstants.secret,
+            signOptions: { expiresIn: '1h' },
+        }),
+        AuthModule,
+        CategoryModule,
+        ArtikelModule,
+    ],
+    controllers: [AuthController],
+    providers: [AuthService, JwtStrategy],
+    exports: [AuthService],
 })
 export class AppModule {}

@@ -6,10 +6,10 @@ export class DataBase {
 
     async checkDatabase() {
         const connection = await this.mysql.createConnection({
-            host: '207.154.246.36',
+            host: '192.168.0.11',
             port: 3306,
-            user: 'bartekbartek**',
-            password: 'beta**1243**',
+            user: 'root',
+            password: 'beta1243',
             multipleStatements: true,
         });
 

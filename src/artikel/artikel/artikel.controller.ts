@@ -6,13 +6,19 @@ import {
     Param,
     Patch,
     Post,
+    Res,
+    UploadedFile,
     UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/auth/role/role.guard';
 import { Artikel } from 'src/entity/artikelEntity';
 import { ArtikelService } from './artikel.service';
 import { ArtikelDTO } from 'src/dto/artikelDTO';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('artikel')
 export class ArtikelController {
@@ -47,5 +53,30 @@ export class ArtikelController {
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     async delete(@Param('id') id: number): Promise<number> {
         return await this.artikelService.delete(id);
+    }
+    @Post('image')
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
+    @UseInterceptors(
+        FileInterceptor('image', {
+            storage: diskStorage({
+                destination: './bilder',
+                filename: (req, file, cb) => {
+                    const randomName = Array(32)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('');
+                    cb(null, `${randomName}${extname(file.originalname)}`);
+                },
+            }),
+        }),
+    )
+    uploadFile(@UploadedFile() file: Express.Multer.File): any {
+        return {
+            path: `${file.path}`,
+        };
+    }
+    @Get('bilder/:fileId')
+    async serveAvatar(@Param('fileId') fileId, @Res() res): Promise<any> {
+        res.sendFile(fileId, { root: 'bilder' });
     }
 }
