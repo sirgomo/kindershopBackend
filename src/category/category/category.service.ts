@@ -11,6 +11,11 @@ export class CategoryService {
         private catRepo: Repository<ArtikelCategory>,
     ) {}
 
+    /**
+     * Creates a new article category in the database.
+     * @param category The category data to be created.
+     * @returns The created category.
+     */
     async create(category: CategoryDTO): Promise<ArtikelCategory> {
         try {
             await this.catRepo.create(category);
@@ -20,6 +25,12 @@ export class CategoryService {
         }
     }
 
+    /**
+     * Updates an existing article category in the database.
+     * @param id The id of the category to be updated.
+     * @param category The updated category data.
+     * @returns The number of affected rows in the database.
+     */
     async update(id: number, category: ArtikelCategory): Promise<number> {
         try {
             return await (
@@ -30,6 +41,11 @@ export class CategoryService {
         }
     }
 
+    /**
+     * Deletes an article category from the database.
+     * @param id The id of the category to be deleted.
+     * @returns The number of affected rows in the database.
+     */
     async delete(id: number): Promise<number> {
         try {
             return await (
@@ -40,6 +56,10 @@ export class CategoryService {
         }
     }
 
+    /**
+     * Finds all article categories in the database.
+     * @returns An array of all article categories.
+     */
     async findAll(): Promise<ArtikelCategory[]> {
         try {
             return await this.catRepo.find();

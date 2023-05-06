@@ -14,6 +14,11 @@ export class ArtikelService {
         private readonly artikelRepository: Repository<Artikel>,
     ) {}
 
+    /**
+     * Fetches all articles from the database with their related categories.
+     * @returns {Promise<Artikel[]>} - Array of Artikel objects with related categories.
+     * @throws {Error} - If there is an error while fetching the articles.
+     */
     async findAll(): Promise<Artikel[]> {
         try {
             return await this.artikelRepository.find({
@@ -28,6 +33,12 @@ export class ArtikelService {
         }
     }
 
+    /**
+     * Fetches an article from the database with its id.
+     * @param {number} id - The id of the article to fetch.
+     * @returns {Promise<Artikel>} - The Artikel object with the given id.
+     * @throws {Error} - If there is an error while fetching the article.
+     */
     async findOne(id: number): Promise<Artikel> {
         try {
             return await this.artikelRepository.findOneOrFail({
@@ -39,6 +50,13 @@ export class ArtikelService {
             );
         }
     }
+
+    /**
+     * Creates a new article in the database.
+     * @param {ArtikelDTO} artikel - The ArtikelDTO object representing the new article.
+     * @returns {Promise<Artikel>} - The newly created Artikel object.
+     * @throws {Error} - If there is an error while creating the article.
+     */
     @UseGuards(AuthGuard())
     async create(artikel: ArtikelDTO): Promise<Artikel> {
         try {
@@ -56,6 +74,14 @@ export class ArtikelService {
             throw new Error(`Error while creating article: ${error}`);
         }
     }
+
+    /**
+     * Updates an article in the database with the given id and fields.
+     * @param {number} id - The id of the article to update.
+     * @param {Artikel} artikel - The Artikel object with the updated fields.
+     * @returns {Promise<number>} - 1 if the update was successful.
+     * @throws {Error} - If there is an error while updating the article.
+     */
     @UseGuards(AuthGuard())
     async update(id: number, artikel: Artikel): Promise<number> {
         try {
@@ -78,6 +104,13 @@ export class ArtikelService {
             );
         }
     }
+
+    /**
+     * Deletes an article from the database with the given id.
+     * @param {number} id - The id of the article to delete.
+     * @returns {Promise<number>} - The number of affected rows (should be 1 if successful).
+     * @throws {Error} - If there is an error while deleting the article.
+     */
     @UseGuards(AuthGuard())
     async delete(id: number): Promise<number> {
         try {
@@ -92,8 +125,13 @@ export class ArtikelService {
             );
         }
     }
-    private async deleteImage(imageId: string) {
-        console.log('delete image ' + imageId);
+
+    /**
+     * Deletes the image file associated with an article.
+     * @param {string} imageId - The id of the image file to delete.
+     * @returns {Promise<void>}
+     */
+    private async deleteImage(imageId: string): Promise<void> {
         await fs.unlink('./bilder/' + imageId, (err) => {
             console.log(err);
         });
