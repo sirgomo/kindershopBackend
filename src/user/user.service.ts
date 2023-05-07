@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entity/userEntity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -129,20 +130,35 @@ export class UserService {
     async changePassword(pass: {
         id: number;
         password: string;
+        altpass: string;
     }): Promise<number> {
         try {
+            let newpassword = '';
             const userToUpdate = await this.userRepository.findOne({
                 where: { id: pass.id },
             });
             if (!userToUpdate) {
-                throw new Error(`User with id ${pass.id} not found`);
+                throw new HttpException(
+                    `User with id ${pass.id} not found`,
+                    HttpStatus.NOT_FOUND,
+                );
             }
-            userToUpdate.password = pass.password;
+            if (bcrypt.compareSync(pass.altpass, userToUpdate.password)) {
+                const solt = await bcrypt.genSalt(10);
+                newpassword = await bcrypt.hash(pass.password, solt);
+            } else {
+                throw new HttpException(
+                    'Alt password stimmt nicht',
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            userToUpdate.password = newpassword;
             return (
                 await this.userRepository.update({ id: pass.id }, userToUpdate)
             ).affected;
         } catch (error) {
-            throw new Error(`Could not change password: ${error.message}`);
+            return error;
         }
     }
 }
