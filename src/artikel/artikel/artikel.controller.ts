@@ -19,6 +19,7 @@ import { ArtikelDTO } from 'src/dto/artikelDTO';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import * as sharp from 'sharp';
 
 @Controller('artikel')
 export class ArtikelController {
@@ -71,12 +72,29 @@ export class ArtikelController {
         }),
     )
     uploadFile(@UploadedFile() file: Express.Multer.File): any {
+        sharp(file.path)
+            .resize(300, 300)
+            .toFile(
+                './thumbnail/' + file.path.split('/')[1],
+                (err, resizedImage) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    if (resizedImage) {
+                        console.log(resizedImage);
+                    }
+                },
+            );
         return {
             path: `${file.path}`,
         };
     }
     @Get('bilder/:fileId')
-    async serveAvatar(@Param('fileId') fileId, @Res() res): Promise<any> {
+    async getBild(@Param('fileId') fileId, @Res() res): Promise<any> {
         res.sendFile(fileId, { root: 'bilder' });
+    }
+    @Get('thumbnail/:fileId')
+    async getThumbnail(@Param('fileId') fileId, @Res() res): Promise<any> {
+        res.sendFile(fileId, { root: 'thumbnail' });
     }
 }

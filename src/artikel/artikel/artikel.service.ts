@@ -95,6 +95,7 @@ export class ArtikelService {
                 });
 
             artikel.categories = cat;
+            console.log(artikel);
             await this.artikelRepository.save(artikel);
 
             return 1;
@@ -132,8 +133,15 @@ export class ArtikelService {
      * @returns {Promise<void>}
      */
     private async deleteImage(imageId: string): Promise<void> {
-        await fs.unlink('./bilder/' + imageId, (err) => {
+        try {
+            await fs.unlink('./bilder/' + imageId, (err) => {
+                console.log(err);
+            });
+            await fs.unlink('./thumbnail/' + imageId, (err) => {
+                console.log(err);
+            });
+        } catch (err) {
             console.log(err);
-        });
+        }
     }
 }
