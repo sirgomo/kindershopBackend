@@ -30,7 +30,7 @@ export class ArtikelController {
         @Param('catid') catid: number,
         @Param('menge') menge: number,
         @Param('search') search: string,
-        @Param('siteNr') sitenr: number,
+        @Param('sitenr') sitenr: number,
     ): Promise<Artikel[]> {
         return await this.artikelService.findAll(catid, menge, search, sitenr);
     }

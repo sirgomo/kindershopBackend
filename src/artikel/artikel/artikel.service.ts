@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ArtikelDTO } from 'src/dto/artikelDTO';
 import { Artikel } from 'src/entity/artikelEntity';
 import { ArtikelCategory } from 'src/entity/artikelKategoryEntity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import * as fs from 'fs';
 
 @Injectable()
@@ -16,6 +16,10 @@ export class ArtikelService {
 
     /**
      * Fetches all articles from the database with their related categories.
+     * @param {number} catid - The ID of the category to filter by. Pass -1 to retrieve all articles.
+     * @param {number} menge - The number of articles to retrieve per page.
+     * @param {string} search - The search term to filter articles by. Pass '0' to retrieve all articles.
+     * @param {number} sitenr - The page number to retrieve.
      * @returns {Promise<Artikel[]>} - Array of Artikel objects with related categories.
      * @throws {Error} - If there is an error while fetching the articles.
      */
@@ -26,20 +30,60 @@ export class ArtikelService {
         sitenr: number,
     ): Promise<Artikel[]> {
         try {
-            console.log(
-                'catid ' +
-                    catid +
-                    ' menge ' +
-                    menge +
-                    ' search ' +
-                    search +
-                    ' sitenr ' +
-                    sitenr,
-            );
+            const take = menge;
+            const skip = menge * (sitenr - 1);
+            if (sitenr < 1) sitenr = 1;
+
+            if (catid != -1 && search == '0') {
+                return await this.artikelRepository.find({
+                    relations: {
+                        categories: true,
+                    },
+                    take: take,
+                    skip: skip,
+                    where: {
+                        categories: {
+                            id: catid,
+                        },
+                    },
+                });
+            }
+
+            if (catid != -1 && search != '0') {
+                return await this.artikelRepository.find({
+                    relations: {
+                        categories: true,
+                    },
+                    take: take,
+                    skip: skip,
+                    where: {
+                        categories: {
+                            id: catid,
+                        },
+                        name: Like('%' + search + '%'),
+                    },
+                });
+            }
+
+            if (catid == -1 && search != '0') {
+                return await this.artikelRepository.find({
+                    relations: {
+                        categories: true,
+                    },
+                    take: take,
+                    skip: skip,
+                    where: {
+                        name: Like('%' + search + '%'),
+                    },
+                });
+            }
+
             return await this.artikelRepository.find({
                 relations: {
                     categories: true,
                 },
+                take: take,
+                skip: skip,
             });
         } catch (error) {
             throw new Error(
