@@ -25,9 +25,14 @@ import * as sharp from 'sharp';
 export class ArtikelController {
     constructor(private readonly artikelService: ArtikelService) {}
 
-    @Get()
-    async findAll(): Promise<Artikel[]> {
-        return await this.artikelService.findAll();
+    @Get(':catid/:menge/:search/:sitenr')
+    async findAll(
+        @Param('catid') catid: number,
+        @Param('menge') menge: number,
+        @Param('search') search: string,
+        @Param('siteNr') sitenr: number,
+    ): Promise<Artikel[]> {
+        return await this.artikelService.findAll(catid, menge, search, sitenr);
     }
 
     @Get(':id')

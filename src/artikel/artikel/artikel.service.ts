@@ -19,8 +19,23 @@ export class ArtikelService {
      * @returns {Promise<Artikel[]>} - Array of Artikel objects with related categories.
      * @throws {Error} - If there is an error while fetching the articles.
      */
-    async findAll(): Promise<Artikel[]> {
+    async findAll(
+        catid: number,
+        menge: number,
+        search: string,
+        sitenr: number,
+    ): Promise<Artikel[]> {
         try {
+            console.log(
+                'catid ' +
+                    catid +
+                    ' menge ' +
+                    menge +
+                    ' search ' +
+                    search +
+                    ' sitenr ' +
+                    sitenr,
+            );
             return await this.artikelRepository.find({
                 relations: {
                     categories: true,
