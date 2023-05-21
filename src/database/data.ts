@@ -82,6 +82,32 @@ export class DataBase {
                 CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_id FOREIGN KEY (artikelId) REFERENCES artikel(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_category_id FOREIGN KEY (artikelCategoryId) REFERENCES artikel_category(id) ON DELETE CASCADE ON UPDATE CASCADE
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+              CREATE TABLE bestellung (
+                id INT NOT NULL AUTO_INCREMENT,
+                email VARCHAR(255) NOT NULL,
+                vorname VARCHAR(255) NOT NULL,
+                nachname VARCHAR(255) NOT NULL,
+                strasse VARCHAR(255) NOT NULL,
+                hausnummer VARCHAR(255) NOT NULL,
+                plz MEDIUMINT NOT NULL,
+                stadt VARCHAR(255) NOT NULL,
+                l_nachname VARCHAR(255),
+                l_strasse VARCHAR(255),
+                l_hausnummer VARCHAR(255),
+                l_plz MEDIUMINT,
+                l_stadt VARCHAR(255),
+                bestellung_status TINYTEXT NOT NULL,
+                total_price DECIMAL(10,2),
+                steuer DECIMAL(10,2),
+                artikels_list VARCHAR(10000) NOT NULL,
+                einkaufs_datum DATETIME,
+                versand_datum DATETIME,
+                bazahlt_am DATETIME,
+                payart TINYTEXT NOT NULL,
+                PRIMARY KEY (id),
+                INDEX (email)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
               `,
                     );
                     console.log('Database created');
