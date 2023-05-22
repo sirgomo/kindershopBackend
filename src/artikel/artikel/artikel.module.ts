@@ -6,8 +6,8 @@ import { Artikel } from 'src/entity/artikelEntity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Artikel]), AuthModule],
-  providers: [ArtikelService],
-  controllers: [ArtikelController],
+    imports: [TypeOrmModule.forFeature([Artikel]), AuthModule],
+    providers: [ArtikelService],
+    controllers: [ArtikelController],
 })
 export class ArtikelModule {}

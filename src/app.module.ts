@@ -13,6 +13,7 @@ import { Artikel } from './entity/artikelEntity';
 import { ArtikelCategory } from './entity/artikelKategoryEntity';
 import { CategoryModule } from './category/category/category.module';
 import { ArtikelModule } from './artikel/artikel/artikel.module';
+import { BestellungenModule } from './bestellungen/bestellungen.module';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { ArtikelModule } from './artikel/artikel/artikel.module';
         AuthModule,
         CategoryModule,
         ArtikelModule,
+        BestellungenModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],
