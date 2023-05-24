@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
-export class IUserDTO {
+export class UserDTO {
     @IsOptional()
     readonly id?: number = 0;
     @IsEmail()

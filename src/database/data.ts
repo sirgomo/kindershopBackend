@@ -54,6 +54,7 @@ export class DataBase {
                 name varchar(255) NOT NULL,
                 description TEXT NOT NULL,
                 price DECIMAL(10,2) NOT NULL,
+                mwst TINYINT DEFAULT 0,
                 brand varchar(255) NOT NULL,
                 model varchar(255) NOT NULL,
                 sku varchar(255) NOT NULL,

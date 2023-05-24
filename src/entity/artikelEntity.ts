@@ -20,6 +20,8 @@ export class Artikel {
 
     @Column('decimal', { precision: 10, scale: 2 })
     price: number;
+    @Column('tinyint')
+    mwst: number;
 
     @Column()
     brand: string;

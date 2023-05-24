@@ -14,6 +14,7 @@ import { ArtikelCategory } from './entity/artikelKategoryEntity';
 import { CategoryModule } from './category/category/category.module';
 import { ArtikelModule } from './artikel/artikel/artikel.module';
 import { BestellungenModule } from './bestellungen/bestellungen.module';
+import { BestellungEntity } from './entity/bestellungEntity';
 
 @Module({
     imports: [
@@ -24,11 +25,11 @@ import { BestellungenModule } from './bestellungen/bestellungen.module';
             username: 'root',
             password: 'beta1243',
             database: 'kindershop',
-            entities: [UserEntity, Artikel, ArtikelCategory],
+            entities: [UserEntity, Artikel, ArtikelCategory, BestellungEntity],
             synchronize: false,
         }),
         UserModule,
-        PassportModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '1h' },

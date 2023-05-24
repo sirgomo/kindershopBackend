@@ -12,6 +12,8 @@ export class ArtikelDTO {
     @IsNotEmpty({ message: 'Darf nicht leer sein' })
     @IsNumber()
     price: number;
+    @IsNumber()
+    mwst: number;
     @IsNotEmpty({ message: 'Darf nicht leer sein' })
     brand: string;
     @IsNotEmpty({ message: 'Darf nicht leer sein' })

@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { ILoginForm } from 'src/model/loginForm';
 import { UserEntity } from 'src/entity/userEntity';
-import { IUserDTO } from 'src/dto/userDTO';
+import { UserDTO } from 'src/dto/userDTO';
 @Injectable()
 export class AuthService {
     constructor(
@@ -60,7 +60,7 @@ export class AuthService {
      * @param user - object containing user's information including email and password
      * @returns Promise resolving to an object with an access token if registration is successful and user is logged in, error object otherwise
      */
-    async registerUser(user: IUserDTO) {
+    async registerUser(user: UserDTO) {
         try {
             const solt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(user.password, solt);

@@ -1,6 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BestellungEntity } from 'src/entity/bestellungEntity';
+import { iKorbItemDTO } from 'src/dto/itemInKorbDTO';
+import { UserDTO } from 'src/dto/userDTO';
+import { Artikel } from 'src/entity/artikelEntity';
+import {
+    BESTELLUNGSTATUS,
+    BestellungEntity,
+} from 'src/entity/bestellungEntity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -41,7 +47,7 @@ export class BestellungenService {
     async getBestelungenBeiEmail(email: string) {
         try {
             return await this.repo
-                .findOne({ where: { email: email } })
+                .find({ where: { email: email } })
                 .catch((err) => {
                     throw new HttpException(
                         err.message,
@@ -62,6 +68,59 @@ export class BestellungenService {
                         HttpStatus.BAD_REQUEST,
                     );
                 });
+        } catch (err) {
+            return err;
+        }
+    }
+    async checkBestellung(user: UserDTO, items: iKorbItemDTO[]) {
+        try {
+            const artikels: Artikel[] = new Array(items.length);
+            for (let i = 0; i < items.length; i++) {
+                artikels[i] = (await this.repo.query(
+                    `SELECT id, price, menge from artikel where id=${items[i].id}`,
+                )) as Artikel;
+                if (i === items.length - 1) {
+                    this.checkPriseMenge(items, artikels);
+                    return items;
+                }
+            }
+        } catch (err) {
+            return err;
+        }
+    }
+    private checkPriseMenge(items: iKorbItemDTO[], artikels: Artikel[]) {
+        for (let i = 0; i < items.length; i++) {
+            console.log(
+                typeof items[i].preis + ' / ' + typeof artikels[i][0].price,
+            );
+            if (items[i].preis !== artikels[i][0].price)
+                throw new HttpException(
+                    'Die prise wurden manipuliert! ... exit',
+                    HttpStatus.CONFLICT,
+                );
+            if (items[i].menge > artikels[i][0].menge)
+                throw new HttpException(
+                    'Keine verfugbare Menge...',
+                    HttpStatus.FORBIDDEN,
+                );
+        }
+    }
+
+    async deleteBestellung(bestellungid: number) {
+        try {
+            const item = await this.repo.findOne({
+                where: { id: bestellungid },
+            });
+            if (
+                item.bestellung_status === BESTELLUNGSTATUS.STORNIERT ||
+                item.bestellung_status === BESTELLUNGSTATUS.ZUGESTELLT
+            ) {
+                return (await this.repo.delete({ id: bestellungid })).affected;
+            }
+            throw new HttpException(
+                'Besttellung wurde nicht Storniert od Zugestellt',
+                HttpStatus.BAD_REQUEST,
+            );
         } catch (err) {
             return err;
         }

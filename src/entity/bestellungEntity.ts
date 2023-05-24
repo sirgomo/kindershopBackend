@@ -14,7 +14,7 @@ export class BestellungEntity {
     strasse: string;
     @Column({ type: 'varchar', length: 255, nullable: false })
     hausnummer: string;
-    @Column({ type: 'mediumint', length: 255, nullable: false })
+    @Column({ type: 'mediumint', nullable: false })
     plz: string;
     @Column({ type: 'varchar', length: 255, nullable: false })
     stadt: string;
@@ -24,7 +24,7 @@ export class BestellungEntity {
     l_strasse: string;
     @Column({ type: 'varchar', length: 255 })
     l_hausnummer: string;
-    @Column({ type: 'mediumint', length: 255 })
+    @Column('mediumint')
     l_plz: string;
     @Column({ type: 'varchar', length: 255 })
     l_stadt: string;
