@@ -81,18 +81,26 @@ export class BestellungenService {
                 )) as Artikel;
                 if (i === items.length - 1) {
                     this.checkPriseMenge(items, artikels);
-                    return items;
+                    return this.getPreisBrutto(items);
                 }
             }
         } catch (err) {
             return err;
         }
     }
+    private getPreisBrutto(items: iKorbItemDTO[]) {
+        let preis = 0;
+        for (let i = 0; i < items.length; i++) {
+            preis +=
+                (Number(items[i].preis) +
+                    (Number(items[i].preis) * items[i].mwst) / 100) *
+                items[i].menge;
+            console.log(preis);
+        }
+        return { preis: preis.toFixed(2) };
+    }
     private checkPriseMenge(items: iKorbItemDTO[], artikels: Artikel[]) {
         for (let i = 0; i < items.length; i++) {
-            console.log(
-                typeof items[i].preis + ' / ' + typeof artikels[i][0].price,
-            );
             if (items[i].preis !== artikels[i][0].price)
                 throw new HttpException(
                     'Die prise wurden manipuliert! ... exit',
