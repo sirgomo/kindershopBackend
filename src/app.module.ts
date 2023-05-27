@@ -15,6 +15,11 @@ import { CategoryModule } from './category/category/category.module';
 import { ArtikelModule } from './artikel/artikel/artikel.module';
 import { BestellungenModule } from './bestellungen/bestellungen.module';
 import { BestellungEntity } from './entity/bestellungEntity';
+import { KreditorenModule } from './kreditoren/kreditoren.module';
+import { WarenbuchungModule } from './warenbuchung/warenbuchung.module';
+import { WarenBuchenEnetity } from './entity/warenBuchenEntity';
+import { KreditorenEntity } from './entity/kreditorenEntity';
+import { BuchungArtikelEntity } from './entity/buchungArtikelEntity';
 
 @Module({
     imports: [
@@ -25,7 +30,15 @@ import { BestellungEntity } from './entity/bestellungEntity';
             username: 'root',
             password: 'beta1243',
             database: 'kindershop',
-            entities: [UserEntity, Artikel, ArtikelCategory, BestellungEntity],
+            entities: [
+                UserEntity,
+                Artikel,
+                ArtikelCategory,
+                BestellungEntity,
+                KreditorenEntity,
+                WarenBuchenEnetity,
+                BuchungArtikelEntity,
+            ],
             synchronize: false,
         }),
         UserModule,
@@ -38,6 +51,8 @@ import { BestellungEntity } from './entity/bestellungEntity';
         CategoryModule,
         ArtikelModule,
         BestellungenModule,
+        KreditorenModule,
+        WarenbuchungModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],

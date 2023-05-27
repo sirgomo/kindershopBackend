@@ -84,7 +84,7 @@ export class DataBase {
                 CONSTRAINT FK_artikel_categories_artikels_artikel_artikel_category_id FOREIGN KEY (artikelCategoryId) REFERENCES artikel_category(id) ON DELETE CASCADE ON UPDATE CASCADE
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-              CREATE TABLE bestellung (
+              CREATE TABLE IF NOT EXISTS bestellung (
                 id INT NOT NULL AUTO_INCREMENT,
                 email VARCHAR(255) NOT NULL,
                 vorname VARCHAR(255) NOT NULL,
@@ -109,6 +109,43 @@ export class DataBase {
                 PRIMARY KEY (id),
                 INDEX (email)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+             
+              CREATE TABLE IF NOT EXISTS kreditoren (
+                id int NOT NULL AUTO_INCREMENT,
+                kreditorennummer varchar(255) NOT NULL UNIQUE,
+                kreditorenname varchar(255) NOT NULL,
+                anschrift varchar(255) NOT NULL,
+                telefonnummer varchar(255) DEFAULT NULL,
+                faxnummer varchar(255) DEFAULT NULL,
+                email varchar(255) DEFAULT NULL,
+                bankname varchar(255) NOT NULL,
+                iban varchar(255) NOT NULL,
+                bic varchar(255) NOT NULL,
+                zahlungsbedingungen varchar(255) DEFAULT NULL,
+                steuernummer varchar(255) DEFAULT NULL,
+                ust_idnr varchar(255) DEFAULT NULL,
+                land tinytext NOT NULL,
+                PRIMARY KEY (id)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+              
+              CREATE TABLE IF NOT EXISTS waren_buchung (
+                buchung_id INT AUTO_INCREMENT PRIMARY KEY,
+                lieferschein_id TINYTEXT NOT NULL,
+                liefer_date DATE NOT NULL,
+                buchung_date DATE NOT NULL,
+                gebucht TINYINT NOT NULL DEFAULT 0,
+                korrigiertes_nr INT,
+                korrigiertes_grund TEXT,
+                kreditor_id INT,
+                artikels TEXT NOT NULL,
+                FOREIGN KEY (kreditor_id) REFERENCES kreditoren(id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+           
+            CREATE TABLE IF NOT EXISTS buchung_artikel (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                artikels_id INT NOT NULL,
+                buchung_id INT NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
               `,
                     );
                     console.log('Database created');

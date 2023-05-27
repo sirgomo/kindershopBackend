@@ -6,6 +6,7 @@ import {
     JoinTable,
 } from 'typeorm';
 import { ArtikelCategory } from './artikelKategoryEntity';
+import { WarenBuchenEnetity } from './warenBuchenEntity';
 
 @Entity()
 export class Artikel {
