@@ -4,6 +4,7 @@ import {
     Delete,
     Get,
     Param,
+    Patch,
     Post,
     Put,
     UseGuards,
@@ -34,7 +35,7 @@ export class KreditorenController {
         return this.kreditorenService.create(kreditoren);
     }
 
-    @Put(':id')
+    @Patch(':id')
     async update(
         @Param('id') id: number,
         @Body() kreditoren: KreditorenEntity,

@@ -11,23 +11,43 @@ export class KreditorenService {
     ) {}
 
     async findAll(): Promise<KreditorenEntity[]> {
-        return this.kreditorenRepository.find();
+        try {
+            return this.kreditorenRepository.find();
+        } catch (err) {
+            return err;
+        }
     }
 
     async findOne(id: number): Promise<KreditorenEntity> {
-        return this.kreditorenRepository.findOne({ where: { id: id } });
+        try {
+            return this.kreditorenRepository.findOne({ where: { id: id } });
+        } catch (err) {
+            return err;
+        }
     }
 
     async create(kreditoren: KreditorenEntity): Promise<KreditorenEntity> {
-        return this.kreditorenRepository.save(kreditoren);
+        try {
+            return this.kreditorenRepository.save(kreditoren);
+        } catch (err) {
+            return err;
+        }
     }
 
     async update(id: number, kreditoren: KreditorenEntity): Promise<number> {
-        return (await this.kreditorenRepository.update(id, kreditoren))
-            .affected;
+        try {
+            return (await this.kreditorenRepository.update(id, kreditoren))
+                .affected;
+        } catch (err) {
+            return err;
+        }
     }
 
     async delete(id: number): Promise<number> {
-        return (await this.kreditorenRepository.delete(id)).affected;
+        try {
+            return (await this.kreditorenRepository.delete(id)).affected;
+        } catch (err) {
+            return err;
+        }
     }
 }
