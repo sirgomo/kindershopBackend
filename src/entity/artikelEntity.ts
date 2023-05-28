@@ -46,6 +46,8 @@ export class Artikel {
 
     @Column()
     dimensions: string;
+    @Column()
+    liferant: number;
 
     @Column('text')
     images: string;

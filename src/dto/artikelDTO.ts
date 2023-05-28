@@ -32,6 +32,8 @@ export class ArtikelDTO {
     @IsNotEmpty({ message: 'Darf nicht leer sein' })
     dimensions: string;
     @IsNotEmpty({ message: 'Darf nicht leer sein' })
+    liferant: number;
+    @IsNotEmpty({ message: 'Darf nicht leer sein' })
     images: string;
     @IsNotEmpty({ message: 'Darf nicht leer sein' })
     relatedProducts: string;

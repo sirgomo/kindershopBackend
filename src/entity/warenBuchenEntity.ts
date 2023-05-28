@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { KreditorenEntity } from './kreditorenEntity';
+import { BuchungArtikelEntity } from './buchungArtikelEntity';
 
 @Entity('waren_buchung')
 export class WarenBuchenEnetity {
@@ -22,6 +29,6 @@ export class WarenBuchenEnetity {
 
     @ManyToOne(() => KreditorenEntity, (kreditor) => kreditor.wareneingaenge)
     kreditor: KreditorenEntity;
-    @Column({ type: 'text', nullable: false })
-    artikels: string;
+    @OneToMany(() => BuchungArtikelEntity, (artikel) => artikel.buchung)
+    artikels: BuchungArtikelEntity[];
 }

@@ -63,6 +63,7 @@ export class DataBase {
                 weight DECIMAL(10,2) NOT NULL,
                 menge INTEGER NOT NULL DEFAULT 0,
                 dimensions varchar(255) NOT NULL,
+                liferant INT NOT NULL DEFAULT 0,
                 images varchar(255) NOT NULL,
                 relatedProducts TEXT NOT NULL,
                 reviews TEXT NOT NULL,
@@ -137,14 +138,18 @@ export class DataBase {
                 korrigiertes_nr INT,
                 korrigiertes_grund TEXT,
                 kreditor_id INT,
-                artikels TEXT NOT NULL,
-                FOREIGN KEY (kreditor_id) REFERENCES kreditoren(id)
+                CONSTRAINT FK_kreditor FOREIGN KEY (kreditor_id) REFERENCES kreditoren(id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
            
             CREATE TABLE IF NOT EXISTS buchung_artikel (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 artikels_id INT NOT NULL,
-                buchung_id INT NOT NULL
+                buchung_id INT NOT NULL,
+                liferantid int NOT NULL,
+                price DECIMAL(10,2),
+                mwst DECIMAL(10,2),
+                menge INT NOT NULL,
+                CONSTRAINT FK_buchung FOREIGN KEY (buchung_id) REFERENCES waren_buchung(buchung_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
               `,
                     );
