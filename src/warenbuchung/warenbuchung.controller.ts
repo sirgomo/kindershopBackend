@@ -10,16 +10,16 @@ export class WarenbuchungController {
 
     @Get()
     async getBuchung() {
-        return this.warenbuchungService.getBuchung();
+        return await this.warenbuchungService.getBuchung();
     }
 
     @Post()
     async createBuchung(@Body() buchung: EingangBuchungDTO) {
-        return this.warenbuchungService.createBuchung(buchung);
+        return await this.warenbuchungService.createBuchung(buchung);
     }
 
     @Patch()
     async editBuchung(@Body() buchung: EingangBuchungDTO) {
-        return this.warenbuchungService.editBuchung(buchung);
+        return await this.warenbuchungService.editBuchung(buchung);
     }
 }
