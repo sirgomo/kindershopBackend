@@ -203,4 +203,43 @@ export class ArtikelService {
             console.log(err);
         }
     }
+    /**
+     * Diese Funktion sucht nach Artikeln für eine Buchung.
+     *
+     * @param search - Der Suchbegriff, nach dem gesucht werden soll.
+     * @param liferant - Die ID des Lieferanten, dessen Artikel gesucht werden sollen.
+     *
+     * @returns Eine Liste von Artikeln, die den Suchkriterien entsprechen.
+     *
+     * @throws {Error}, wenn ein Fehler auftritt.
+     */
+    async findForBuchung(search: string, liferant: number) {
+        try {
+            if (search.length > 2 && search !== '0')
+                return await this.artikelRepository.find({
+                    where: {
+                        name: Like('%' + search + '%'),
+                        liferant: liferant,
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        liferant: true,
+                    },
+                });
+
+            return await this.artikelRepository.find({
+                where: {
+                    liferant: liferant,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    liferant: true,
+                },
+            });
+        } catch (err) {
+            return err;
+        }
+    }
 }

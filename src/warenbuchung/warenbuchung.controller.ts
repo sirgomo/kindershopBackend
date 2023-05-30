@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    Patch,
+    Post,
+    UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { EingangBuchungDTO } from 'src/dto/eingangBuchungDTO';
 import { WarenbuchungService } from './warenbuchung.service';
@@ -12,7 +20,10 @@ export class WarenbuchungController {
     async getBuchung() {
         return await this.warenbuchungService.getBuchung();
     }
-
+    @Get(':id')
+    async getBuchungBeiId(@Param('id') id: number) {
+        return await this.warenbuchungService.getBuchungById(id);
+    }
     @Post()
     async createBuchung(@Body() buchung: EingangBuchungDTO) {
         return await this.warenbuchungService.createBuchung(buchung);

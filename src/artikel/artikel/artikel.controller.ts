@@ -102,4 +102,13 @@ export class ArtikelController {
     async getThumbnail(@Param('fileId') fileId, @Res() res): Promise<any> {
         res.sendFile(fileId, { root: 'thumbnail' });
     }
+
+    @Get('buch/:such/:lifer')
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
+    async getArtikelForBuchung(
+        @Param('such') such: string,
+        @Param('lifer') lifer: number,
+    ) {
+        return await this.artikelService.findForBuchung(such, lifer);
+    }
 }
