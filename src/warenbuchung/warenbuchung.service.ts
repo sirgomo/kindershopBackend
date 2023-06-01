@@ -22,6 +22,7 @@ export class WarenbuchungService {
      * @throws HttpException mit Statuscode 404, wenn keine Buchungen gefunden wurden.
      */
     async getBuchung() {
+        console.log('egt buchung');
         try {
             return await this.warRepo
                 .find({
@@ -76,6 +77,10 @@ export class WarenbuchungService {
     async createBuchung(buchung: EingangBuchungDTO) {
         try {
             const enti: WarenBuchenEnetity = await this.warRepo.create(buchung);
+            //enti.buchung_date = this.convertDate(buchung.buchung_date);
+            //enti.liefer_date = this.convertDate(buchung.liefer_date);
+
+            console.log(enti);
             return await this.warRepo.save(enti).catch((err) => {
                 console.log(err);
                 throw new HttpException(
@@ -86,6 +91,11 @@ export class WarenbuchungService {
         } catch (err) {
             return err;
         }
+    }
+    private convertDate(date: string) {
+        console.log(date);
+        const datet = date.split('T')[0].split('-');
+        return `${datet[0]}-${Number(datet[1]) + 1}-${datet[2]}`;
     }
     /**
      * Ändert eine bestehende Warenbuchung.

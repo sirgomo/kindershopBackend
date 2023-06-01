@@ -1,6 +1,7 @@
 import {
     Column,
     Entity,
+    JoinColumn,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -28,6 +29,7 @@ export class WarenBuchenEnetity {
     korrigiertes_grund: string;
 
     @ManyToOne(() => KreditorenEntity, (kreditor) => kreditor.wareneingaenge)
+    @JoinColumn({ name: 'kreditor_id' })
     kreditor: KreditorenEntity;
     @OneToMany(() => BuchungArtikelEntity, (artikel) => artikel.buchung)
     artikels: BuchungArtikelEntity[];

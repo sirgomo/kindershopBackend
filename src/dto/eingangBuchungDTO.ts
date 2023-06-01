@@ -1,10 +1,4 @@
-import {
-    IsOptional,
-    IsNumber,
-    IsNotEmpty,
-    IsString,
-    IsDate,
-} from 'class-validator';
+import { IsOptional, IsNumber, IsNotEmpty, IsString } from 'class-validator';
 import { BuchungArtikelDTO } from './buchungArtikelDTO';
 import { KreditorenDto } from './kreditorenDTO';
 
@@ -18,11 +12,9 @@ export class EingangBuchungDTO {
     lieferschein_id: string;
 
     @IsNotEmpty()
-    @IsDate()
     liefer_date: Date;
 
     @IsNotEmpty()
-    @IsDate()
     buchung_date: Date;
 
     @IsOptional()
@@ -38,7 +30,6 @@ export class EingangBuchungDTO {
     korrigiertes_grund: string;
 
     @IsNotEmpty()
-    @IsNumber()
     kreditor: KreditorenDto;
 
     @IsNotEmpty()
