@@ -21,7 +21,6 @@ export class BuchungArtikelDTO {
     price: number;
 
     @IsNumber()
-    @IsPositive()
     mwst: number;
 
     @IsInt()

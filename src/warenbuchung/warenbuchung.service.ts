@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BuchungArtikelDTO } from 'src/dto/buchungArtikelDTO';
 import { EingangBuchungDTO } from 'src/dto/eingangBuchungDTO';
 import { Artikel } from 'src/entity/artikelEntity';
 import { BuchungArtikelEntity } from 'src/entity/buchungArtikelEntity';
@@ -12,7 +13,7 @@ export class WarenbuchungService {
         @InjectRepository(WarenBuchenEnetity)
         private readonly warRepo: Repository<WarenBuchenEnetity>,
         @InjectRepository(BuchungArtikelEntity)
-        private readonly artRepo: Repository<BuchungArtikelEntity>,
+        private readonly artBuchungRepo: Repository<BuchungArtikelEntity>,
         @InjectRepository(Artikel)
         private readonly artikelRepo: Repository<Artikel>,
     ) {}
@@ -57,13 +58,28 @@ export class WarenbuchungService {
                         artikels: true,
                     },
                 })
-                .catch((err) => {
-                    console.log(err);
-                    throw new HttpException(
-                        'Kein Buchung mit nr ' + id + ' wurde gefunden ',
-                        HttpStatus.NOT_FOUND,
-                    );
-                });
+                .then(
+                    (data) => {
+                        for (let i = 0; i < data.artikels.length; i++) {
+                            const price = Number.parseFloat(
+                                data.artikels[i].price.toString(),
+                            );
+                            const mwst = Number.parseFloat(
+                                data.artikels[i].mwst.toString(),
+                            );
+                            data.artikels[i].price = price;
+                            data.artikels[i].mwst = mwst;
+                        }
+                        return data;
+                    },
+                    (err) => {
+                        console.log(err);
+                        throw new HttpException(
+                            'Kein Buchung mit nr ' + id + ' wurde gefunden ',
+                            HttpStatus.NOT_FOUND,
+                        );
+                    },
+                );
         } catch (err) {
             return err;
         }
@@ -77,10 +93,6 @@ export class WarenbuchungService {
     async createBuchung(buchung: EingangBuchungDTO) {
         try {
             const enti: WarenBuchenEnetity = await this.warRepo.create(buchung);
-            //enti.buchung_date = this.convertDate(buchung.buchung_date);
-            //enti.liefer_date = this.convertDate(buchung.liefer_date);
-
-            console.log(enti);
             return await this.warRepo.save(enti).catch((err) => {
                 console.log(err);
                 throw new HttpException(
@@ -92,11 +104,7 @@ export class WarenbuchungService {
             return err;
         }
     }
-    private convertDate(date: string) {
-        console.log(date);
-        const datet = date.split('T')[0].split('-');
-        return `${datet[0]}-${Number(datet[1]) + 1}-${datet[2]}`;
-    }
+
     /**
      * Ändert eine bestehende Warenbuchung.
      * @param buchung - DTO, das die neuen Informationen für die Warenbuchung enthält.
@@ -117,21 +125,19 @@ export class WarenbuchungService {
                 await this.saveArtikels(enti, backup, art, false);
             }
 
-            return await this.warRepo
-                .update({ buchung_id: buchung.buchung_id }, enti)
-                .then(
-                    (res) => {
-                        return res.affected;
-                    },
-                    (err) => {
-                        console.log(err);
-                        this.saveArtikels(enti, backup, art, true);
-                        throw new HttpException(
-                            'Es ein fehler aufgetreten, die anderungen wurden nicht gespeichert',
-                            HttpStatus.BAD_REQUEST,
-                        );
-                    },
-                );
+            return await this.warRepo.save(enti).then(
+                (res) => {
+                    return res;
+                },
+                (err) => {
+                    console.log(err);
+                    this.saveArtikels(enti, backup, art, true);
+                    throw new HttpException(
+                        'Es ein fehler aufgetreten, die anderungen wurden nicht gespeichert',
+                        HttpStatus.BAD_REQUEST,
+                    );
+                },
+            );
         } catch (err) {
             return err;
         }
@@ -172,5 +178,27 @@ export class WarenbuchungService {
                 console.log(err);
             },
         );
+    }
+    async addArtikelToBuchung(item: BuchungArtikelDTO) {
+        try {
+            const buchung = await this.warRepo.findOne({
+                where: { buchung_id: item.buchung_id },
+            });
+            if (buchung.gebucht === 2)
+                throw new HttpException(
+                    'Buchung gebucht! Es kann nichts geändert werden!',
+                    HttpStatus.NOT_FOUND,
+                );
+
+            const art = await this.artBuchungRepo.create(item);
+            return await this.artBuchungRepo.save(art).catch((err) => {
+                throw new HttpException(
+                    err.message,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                );
+            });
+        } catch (err) {
+            return err;
+        }
     }
 }

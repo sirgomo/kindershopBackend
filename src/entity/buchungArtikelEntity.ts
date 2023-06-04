@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { WarenBuchenEnetity } from './warenBuchenEntity';
 
 @Entity('buchung_artikel')
@@ -19,5 +25,6 @@ export class BuchungArtikelEntity {
     menge: number;
 
     @ManyToOne(() => WarenBuchenEnetity, (buchung) => buchung.artikels)
+    @JoinColumn({ name: 'buchung_id' })
     buchung: WarenBuchenEnetity;
 }

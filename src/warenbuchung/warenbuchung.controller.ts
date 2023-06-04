@@ -10,6 +10,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { EingangBuchungDTO } from 'src/dto/eingangBuchungDTO';
 import { WarenbuchungService } from './warenbuchung.service';
+import { BuchungArtikelDTO } from 'src/dto/buchungArtikelDTO';
 
 @Controller('warenbuchung')
 @UseGuards(AuthGuard('jwt'))
@@ -32,5 +33,9 @@ export class WarenbuchungController {
     @Patch()
     async editBuchung(@Body() buchung: EingangBuchungDTO) {
         return await this.warenbuchungService.editBuchung(buchung);
+    }
+    @Post('art')
+    async addArtikelToBuchung(@Body() artikel: BuchungArtikelDTO) {
+        return await this.warenbuchungService.addArtikelToBuchung(artikel);
     }
 }
