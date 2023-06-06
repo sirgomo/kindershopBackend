@@ -4,8 +4,9 @@ import { BuchungArtikelDTO } from 'src/dto/buchungArtikelDTO';
 import { EingangBuchungDTO } from 'src/dto/eingangBuchungDTO';
 import { Artikel } from 'src/entity/artikelEntity';
 import { BuchungArtikelEntity } from 'src/entity/buchungArtikelEntity';
+import { KreditorenEntity } from 'src/entity/kreditorenEntity';
 import { WarenBuchenEnetity } from 'src/entity/warenBuchenEntity';
-import { Repository } from 'typeorm';
+import { JoinTable, Repository } from 'typeorm';
 
 @Injectable()
 export class WarenbuchungService {
@@ -50,7 +51,7 @@ export class WarenbuchungService {
      */
     async getBuchungById(id: number) {
         try {
-            return await this.warRepo
+            const items = await this.warRepo
                 .findOne({
                     where: { buchung_id: id },
                     relations: {
@@ -60,16 +61,6 @@ export class WarenbuchungService {
                 })
                 .then(
                     (data) => {
-                        for (let i = 0; i < data.artikels.length; i++) {
-                            const price = Number.parseFloat(
-                                data.artikels[i].price.toString(),
-                            );
-                            const mwst = Number.parseFloat(
-                                data.artikels[i].mwst.toString(),
-                            );
-                            data.artikels[i].price = price;
-                            data.artikels[i].mwst = mwst;
-                        }
                         return data;
                     },
                     (err) => {
@@ -80,6 +71,23 @@ export class WarenbuchungService {
                         );
                     },
                 );
+            for (let i = 0; i < items.artikels.length; i++) {
+                const price = Number.parseFloat(
+                    items.artikels[i].price.toString(),
+                );
+                const mwst = Number.parseFloat(
+                    items.artikels[i].mwst.toString(),
+                );
+                items.artikels[i].price = price;
+                items.artikels[i].mwst = mwst;
+                const name = await this.warRepo.query(
+                    'select name from artikel where id=' +
+                        items.artikels[i].artikels_id,
+                );
+                items.artikels[i] = { ...items.artikels[i], ...name[0] };
+            }
+            console.log(items);
+            return items;
         } catch (err) {
             return err;
         }
@@ -123,6 +131,25 @@ export class WarenbuchungService {
                 );
             } else if (enti.gebucht === 1) {
                 await this.saveArtikels(enti, backup, art, false);
+            }
+            const artiklesInBuchung = await this.artBuchungRepo.find({
+                where: { buchung_id: enti.buchung_id },
+            });
+            const buch = await this.warRepo.findOne({
+                where: { buchung_id: enti.buchung_id },
+                relations: {
+                    kreditor: true,
+                },
+            });
+
+            if (
+                enti.kreditor.id !== buch.kreditor.id &&
+                artiklesInBuchung.length > 0
+            ) {
+                throw new HttpException(
+                    'Artikels sind schön gebutch, der liferant kann nicht geändert werden',
+                    HttpStatus.BAD_REQUEST,
+                );
             }
 
             return await this.warRepo.save(enti).then(
@@ -197,6 +224,25 @@ export class WarenbuchungService {
                     HttpStatus.INTERNAL_SERVER_ERROR,
                 );
             });
+        } catch (err) {
+            return err;
+        }
+    }
+    async removeItemFromBuchung(
+        buchungArtikelId: number,
+        buchungid: number,
+    ): Promise<number> {
+        try {
+            const buchung = await this.warRepo.findOne({
+                where: { buchung_id: buchungid },
+            });
+            if (buchung.gebucht === 2)
+                throw new HttpException(
+                    'Buchung gebucht! Es kann nichts geändert werden!',
+                    HttpStatus.NOT_FOUND,
+                );
+            return (await this.artBuchungRepo.delete(buchungArtikelId))
+                .affected;
         } catch (err) {
             return err;
         }

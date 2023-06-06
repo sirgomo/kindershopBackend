@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     Patch,
@@ -37,5 +38,15 @@ export class WarenbuchungController {
     @Post('art')
     async addArtikelToBuchung(@Body() artikel: BuchungArtikelDTO) {
         return await this.warenbuchungService.addArtikelToBuchung(artikel);
+    }
+    @Delete(':artid/:buchid')
+    async deleteArtikelFromBuchung(
+        @Param('artid') artid: number,
+        @Param('buchid') buchid: number,
+    ) {
+        return await this.warenbuchungService.removeItemFromBuchung(
+            artid,
+            buchid,
+        );
     }
 }
