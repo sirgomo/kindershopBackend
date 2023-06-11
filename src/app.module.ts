@@ -20,16 +20,18 @@ import { WarenbuchungModule } from './warenbuchung/warenbuchung.module';
 import { WarenBuchenEnetity } from './entity/warenBuchenEntity';
 import { KreditorenEntity } from './entity/kreditorenEntity';
 import { BuchungArtikelEntity } from './entity/buchungArtikelEntity';
+import { ConfigModule } from '@nestjs/config';
+import { env } from 'environments/environments';
 
 @Module({
     imports: [
         TypeOrmModule.forRoot({
             type: 'mysql',
-            host: '192.168.0.11',
-            port: 3306,
-            username: 'root',
-            password: 'beta1243',
-            database: 'kindershop',
+            host: env.ENV_HOST,
+            port: env.ENV_PORT,
+            username: env.ENV_USER,
+            password: env.ENV_PASS,
+            database: env.ENV_DATABASE,
             entities: [
                 UserEntity,
                 Artikel,
@@ -53,6 +55,10 @@ import { BuchungArtikelEntity } from './entity/buchungArtikelEntity';
         BestellungenModule,
         KreditorenModule,
         WarenbuchungModule,
+        ConfigModule.forRoot({
+            ignoreEnvFile: true,
+            envFilePath: '.environments/environments.env',
+        }),
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],

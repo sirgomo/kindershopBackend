@@ -1,15 +1,17 @@
+import { env } from 'environments/environments';
 export class DataBase {
     mysql = require('mysql2/promise');
+    env = env;
     checkData() {
+        console.log(env);
         this.checkDatabase();
     }
-
     async checkDatabase() {
         const connection = await this.mysql.createConnection({
-            host: '192.168.0.11',
-            port: 3306,
-            user: 'root',
-            password: 'beta1243',
+            host: env.ENV_HOST,
+            port: env.ENV_PORT,
+            user: env.ENV_USER,
+            password: env.ENV_PASS,
             multipleStatements: true,
         });
 
@@ -27,7 +29,7 @@ export class DataBase {
                     await connection.query(
                         `CREATE DATABASE kindershop;
                 
-              USE kindershop;
+              USE ${env.ENV_DATABASE};
 
               CREATE TABLE IF NOT EXISTS user (
                 id INT NOT NULL AUTO_INCREMENT,
