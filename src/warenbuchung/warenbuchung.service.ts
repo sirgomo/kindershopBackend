@@ -4,9 +4,8 @@ import { BuchungArtikelDTO } from 'src/dto/buchungArtikelDTO';
 import { EingangBuchungDTO } from 'src/dto/eingangBuchungDTO';
 import { Artikel } from 'src/entity/artikelEntity';
 import { BuchungArtikelEntity } from 'src/entity/buchungArtikelEntity';
-import { KreditorenEntity } from 'src/entity/kreditorenEntity';
 import { WarenBuchenEnetity } from 'src/entity/warenBuchenEntity';
-import { JoinTable, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class WarenbuchungService {

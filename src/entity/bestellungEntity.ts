@@ -44,6 +44,8 @@ export class BestellungEntity {
     bazahlt_am: Date;
     @Column({ type: 'tinytext', nullable: false })
     payart: PAYART;
+    @Column('varchar')
+    paypalOrderId: string;
 }
 
 export enum BESTELLUNGSTATUS {

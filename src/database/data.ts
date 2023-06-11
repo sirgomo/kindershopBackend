@@ -107,6 +107,7 @@ export class DataBase {
                 versand_datum DATETIME,
                 bazahlt_am DATETIME,
                 payart TINYTEXT NOT NULL,
+                paypalOrderId VARCHAR(255) NOT NULL,
                 PRIMARY KEY (id),
                 INDEX (email)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

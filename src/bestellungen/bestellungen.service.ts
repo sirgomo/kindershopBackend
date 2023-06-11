@@ -97,7 +97,7 @@ export class BestellungenService {
                 items[i].menge;
             console.log(preis);
         }
-        return { preis: preis.toFixed(2) };
+        return { preis: preis.toFixed(2), item: items };
     }
     private checkPriseMenge(items: iKorbItemDTO[], artikels: Artikel[]) {
         for (let i = 0; i < items.length; i++) {
