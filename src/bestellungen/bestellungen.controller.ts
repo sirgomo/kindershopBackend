@@ -28,6 +28,7 @@ export class BestellungenController {
     @Get('email/:email')
     @UseGuards(AuthGuard('jwt'))
     async getBestellungenBeiEmail(@Param('email') email: string) {
+        console.log('em ' + email);
         return await this.bestService.getBestelungenBeiEmail(email);
     }
 
@@ -49,5 +50,9 @@ export class BestellungenController {
     @UseGuards(AuthGuard('jwt'))
     async deleteBestellung(@Param('id') bestellungid: number) {
         return await this.bestService.deleteBestellung(bestellungid);
+    }
+    @Post('/new')
+    async createBestellung(@Body() res: any) {
+        return await this.bestService.createBestellung(res);
     }
 }

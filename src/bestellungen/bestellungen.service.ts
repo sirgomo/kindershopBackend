@@ -47,7 +47,19 @@ export class BestellungenService {
     async getBestelungenBeiEmail(email: string) {
         try {
             return await this.repo
-                .find({ where: { email: email } })
+                .find({
+                    where: { email: email },
+                    select: {
+                        id: true,
+                        email: true,
+                        bestellung_status: true,
+                        total_price: true,
+                        steuer: true,
+                        einkaufs_datum: true,
+                        versand_datum: true,
+                        bazahlt_am: true,
+                    },
+                })
                 .catch((err) => {
                     throw new HttpException(
                         err.message,
@@ -129,6 +141,14 @@ export class BestellungenService {
                 'Besttellung wurde nicht Storniert od Zugestellt',
                 HttpStatus.BAD_REQUEST,
             );
+        } catch (err) {
+            return err;
+        }
+    }
+    async createBestellung(besttelung: BestellungEntity) {
+        try {
+            const tmpBes = await this.repo.create(besttelung);
+            return await this.repo.save(tmpBes);
         } catch (err) {
             return err;
         }
