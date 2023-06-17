@@ -18,6 +18,7 @@ export class BestellungenService {
 
     async getBestellungen(menge: number, sitenr: number) {
         if (sitenr < 1) sitenr = 1;
+        if (menge < 1) menge = 20;
 
         const skip = menge * sitenr - menge;
         try {
@@ -27,6 +28,9 @@ export class BestellungenService {
                         id: true,
                         email: true,
                         bestellung_status: true,
+                        total_price: true,
+                        steuer: true,
+                        einkaufs_datum: true,
                         versand_datum: true,
                         bazahlt_am: true,
                     },
@@ -120,7 +124,7 @@ export class BestellungenService {
                 );
             if (items[i].menge > artikels[i][0].menge)
                 throw new HttpException(
-                    'Keine verfugbare Menge...',
+                    `Die maximale verfügbare Menge für ${items[i].name} beträgt ${artikels[i][0].menge}.`,
                     HttpStatus.FORBIDDEN,
                 );
         }
@@ -148,7 +152,38 @@ export class BestellungenService {
     async createBestellung(besttelung: BestellungEntity) {
         try {
             const tmpBes = await this.repo.create(besttelung);
+            const items: iKorbItemDTO[] = JSON.parse(tmpBes.artikels_list);
+            console.log(items);
+            for (let i = 0; i < items.length; i++) {
+                await this.repo
+                    .query(
+                        `UPDATE artikel set menge = menge - ${items[i].menge}
+                where id=${items[i].id}`,
+                    )
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
             return await this.repo.save(tmpBes);
+        } catch (err) {
+            return err;
+        }
+    }
+    async changeBestellungStatus(item: {
+        id: number;
+        status: BESTELLUNGSTATUS;
+    }) {
+        try {
+            const tmp = await this.repo.findOne({ where: { id: item.id } });
+            if (tmp === null) {
+                throw new HttpException(
+                    'Bestellung wurde nicht gefunden ',
+                    HttpStatus.NOT_FOUND,
+                );
+            }
+
+            tmp.bestellung_status = item.status;
+            return this.repo.save(tmp);
         } catch (err) {
             return err;
         }

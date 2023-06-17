@@ -11,6 +11,7 @@ import {
 import { BestellungenService } from './bestellungen.service';
 import { AuthGuard } from '@nestjs/passport';
 import { iKorbItemDTO } from 'src/dto/itemInKorbDTO';
+import { BESTELLUNGSTATUS } from 'src/entity/bestellungEntity';
 
 @Controller('bestellungen')
 export class BestellungenController {
@@ -54,5 +55,11 @@ export class BestellungenController {
     @Post('/new')
     async createBestellung(@Body() res: any) {
         return await this.bestService.createBestellung(res);
+    }
+    @Post('/change-status')
+    async changeBestellungStatus(
+        @Body() item: { id: number; status: BESTELLUNGSTATUS },
+    ) {
+        return await this.bestService.changeBestellungStatus(item);
     }
 }
